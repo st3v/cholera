@@ -1,0 +1,9 @@
+---
+timeout: 180
+instances: 1
+memory: 64M
+applications:
+- buildpack: go_buildpack
+  command: cholera
+services:
+- mysql
