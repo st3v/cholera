@@ -20,7 +20,11 @@ func main() {
 		log.Fatal("Must bind mysql service")
 	}
 
-	db, err := sql.Open("mysql", service.Credentials["uri"].(string))
+	creds := service.Credentials
+	uri := fmt.Sprintf("%s:%s@tcp(%s:%.0f)/%s", creds["username"], creds["password"], creds["hostname"], creds["port"], creds["name"])
+	fmt.Println("URI:", uri)
+
+	db, err := sql.Open("mysql", uri)
 	if err != nil {
 		log.Fatal("Error connecting to db:", err)
 	}
@@ -28,7 +32,7 @@ func main() {
 
 	if _, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS foo (
-			id INT(11) NOT NULL AUTO_INCREMENT,
+			id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			count INT(11),
 			uuid VARCHAR(32)
